@@ -1,0 +1,6 @@
+name: Crates
+version: '${project.version}'
+main: com.github.maiky1304.crates.Crates
+authors: [ Maiky1304 ]
+description: A crates plugin made as SeniorTeam trial.
+website: https://github.com/Maiky1304/Crates

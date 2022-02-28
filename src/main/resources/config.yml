@@ -1,2 +1,10 @@
 mongodb:
+  # You can easily create a free database at https://cloud.mongodb.com
   connection-uri: ""
+
+settings:
+  # Set the amount of crates a player can open each day
+  per-day: 3
+  # Set the cooldown which a player has to wait between opening crates,
+  # time unit is seconds.
+  cooldown: 5

@@ -3,7 +3,6 @@ package com.github.maiky1304.crates.listeners;
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.database.manager.UserManager;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

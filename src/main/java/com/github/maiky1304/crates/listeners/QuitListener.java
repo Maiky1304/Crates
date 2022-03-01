@@ -24,7 +24,9 @@ public class QuitListener implements Listener {
             return;
 
         User user = manager.getCache().get(player.getUniqueId());
-        manager
+        manager.updateUser(user).thenRun(() -> {
+            manager.getCache().remove(player.getUniqueId());
+        });
     }
 
 }

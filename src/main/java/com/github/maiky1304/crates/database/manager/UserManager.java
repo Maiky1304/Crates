@@ -1,7 +1,6 @@
 package com.github.maiky1304.crates.database.manager;
 
 import com.github.maiky1304.crates.CratesPlugin;
-import com.github.maiky1304.crates.DatabaseExclusionStrategy;
 import com.github.maiky1304.crates.database.DatabaseCredentials;
 import com.github.maiky1304.crates.database.DatabaseManager;
 import com.github.maiky1304.crates.database.QueryResult;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class UserManager implements DatabaseManager<User> {
 
     private final MySQLImpl database;
-    private final Gson gson;
 
     private final HashMap<UUID, User> cache = new HashMap<>();
 
@@ -34,11 +32,6 @@ public class UserManager implements DatabaseManager<User> {
             throw new InstantiationException("Cannot find the MySQL credentials in the config.yml");
         }
 
-        DatabaseExclusionStrategy strategy = new DatabaseExclusionStrategy();
-        this.gson = new GsonBuilder()
-                .addSerializationExclusionStrategy(strategy)
-                .addDeserializationExclusionStrategy(strategy)
-                .create();
         this.database = new MySQLImpl(DatabaseCredentials.fromConfig(mysql));
     }
 

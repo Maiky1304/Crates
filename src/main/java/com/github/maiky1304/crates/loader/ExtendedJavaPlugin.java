@@ -1,9 +1,13 @@
 package com.github.maiky1304.crates.loader;
 
+import com.github.maiky1304.crates.utils.command.Command;
 import com.github.maiky1304.crates.utils.config.Config;
 import lombok.Getter;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
 
 /**
  * Custom Plugin class to extend Main class of plugin with
@@ -50,6 +54,16 @@ public abstract class ExtendedJavaPlugin extends JavaPlugin {
      */
     public <L extends Listener> void registerListener(L listener) {
         getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    /**
+     * Registers a command easily without having to provide everything
+     * yourself.
+     * @param command
+     * @param <P>
+     */
+    public <P extends Command> void registerCommand(P command) {
+        getCommand(command.getInfo().value()).setExecutor(command);
     }
 
 }

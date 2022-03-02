@@ -1,17 +1,15 @@
-package com.github.maiky1304.crates.utils.command;
+package com.github.maiky1304.crates.utils.menu;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SubCommandInfo {
+public @interface MenuInfo {
 
-    String value();
-    String permission() default "";
-    String usage() default "";
-
+    String title();
+    int rows() default 9;
 
 }

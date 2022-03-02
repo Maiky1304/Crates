@@ -1,6 +1,9 @@
-mongodb:
-  # You can easily create a free database at https://cloud.mongodb.com
-  connection-uri: ""
+mysql:
+  host: localhost
+  port: 3306
+  username: root
+  password: p@ssword
+  database: data
 
 settings:
   # Set the amount of crates a player can open each day

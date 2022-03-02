@@ -4,3 +4,6 @@ main: com.github.maiky1304.crates.CratesPlugin
 authors: [ Maiky1304 ]
 description: A crates plugin made as SeniorTeam trial.
 website: https://github.com/Maiky1304/Crates
+commands:
+  crate:
+    description: Default command for Crates plugin.

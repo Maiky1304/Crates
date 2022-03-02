@@ -1,6 +1,6 @@
 package com.github.maiky1304.crates.utils.command;
 
-import com.github.maiky1304.crates.utils.colors.Text;
+import com.github.maiky1304.crates.utils.text.Text;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;

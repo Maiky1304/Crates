@@ -63,6 +63,8 @@ public abstract class ExtendedJavaPlugin extends JavaPlugin {
      * @param <P>
      */
     public <P extends Command> void registerCommand(P command) {
+        Objects.requireNonNull(getCommand(command.getInfo().value()), String.format("It looks like you haven't registered the command /%s in your plugin.yml yet!",
+                command.getInfo().value()));
         getCommand(command.getInfo().value()).setExecutor(command);
     }
 

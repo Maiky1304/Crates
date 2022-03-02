@@ -17,7 +17,7 @@ public class MySQLImpl implements Database {
 
     public MySQLImpl(DatabaseCredentials credentials) {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(String.format("mysql:jdbc://%s:%s/%s", credentials.getHost(),
+        hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%s/%s", credentials.getHost(),
                 credentials.getPort(), credentials.getDatabase()));
         hikariConfig.setUsername(credentials.getUsername());
         hikariConfig.setPassword(credentials.getPassword());

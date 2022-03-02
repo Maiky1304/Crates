@@ -16,7 +16,6 @@ public class CommandHelp {
 
     private final List<SubCommandInfo> subCommandInfoList = new ArrayList<>();
 
-    private int page = 0;
     private int perPage;
 
     public CommandHelp(Command command) {
@@ -31,7 +30,7 @@ public class CommandHelp {
     }
 
     public int getPages() {
-        return subCommandInfoList.size() / perPage;
+        return (int) Math.ceil((double) subCommandInfoList.size() / perPage);
     }
 
     public List<SubCommandInfo> getRange(int page) {

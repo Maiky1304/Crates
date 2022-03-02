@@ -1,4 +1,6 @@
-package com.github.maiky1304.crates.utils.command;
+package com.github.maiky1304.crates.utils.menu;
+
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,11 +9,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SubCommandInfo {
+public @interface ClickListener {
 
-    String value();
-    String permission() default "";
-    String usage() default "";
-
+    int slot();
+    String itemId();
 
 }

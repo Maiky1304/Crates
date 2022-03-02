@@ -9,16 +9,19 @@ import com.github.maiky1304.crates.utils.menu.Menu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.function.Consumer;
+
 public class ConfirmMenu extends Menu {
 
     private final Crate crate;
     private final CratesPlugin instance;
+    private final Consumer<Player> consumer;
 
-    public ConfirmMenu(CratesPlugin instance, Player player, Crate crate) {
+    public ConfirmMenu(CratesPlugin instance, Player player, Crate crate, Consumer<Player> consumer) {
         super(
                 player,
                 3,
-                String.format("Create crate %s?", crate.getName())
+                "Confirm action"
         );
 
         this.instance = instance;
@@ -26,15 +29,17 @@ public class ConfirmMenu extends Menu {
 
         this.crate = crate;
 
+        this.consumer = consumer;
+
         this.defineItem("confirm_item", ItemBuilder
                 .of(Material.WOOL)
                 .setData(5)
-                .setName("&a&lConfirm action")
+                .setName("&a&lConfirm")
                 .build());
         this.defineItem("cancel_item", ItemBuilder
                 .of(Material.WOOL)
                 .setData(14)
-                .setName("&c&lCancel action")
+                .setName("&c&lCancel")
                 .build());
     }
 
@@ -43,13 +48,7 @@ public class ConfirmMenu extends Menu {
             itemId = "confirm_item"
     )
     public void confirmButton(ClickContext context) {
-        instance.getData().set(crate.getName(), crate.toConfig());
-        instance.getData().save();
-
-        context.reply(String.format("&dYou've successfully created a crate with the name &7%s&d.",
-                crate.getName()));
-        context.reply(String.format("&dEdit it using &7/crate edit %s&d.", crate.getName()));
-        context.getPlayer().closeInventory();
+        consumer.accept(context.getPlayer());
     }
 
     @ClickListener(

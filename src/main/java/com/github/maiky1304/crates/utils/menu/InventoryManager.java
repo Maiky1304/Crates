@@ -5,13 +5,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class InventoryManager implements Listener {
 
@@ -35,32 +32,16 @@ public class InventoryManager implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        Inventory inventory = event.getWhoClicked().getOpenInventory().getTopInventory();
         if (this.activeMenus.stream().noneMatch(menu -> menu.getInventory()
-                .equals(event.getClickedInventory()))) return;
+                .equals(inventory))) return;
 
         event.setCancelled(true);
 
         Menu menu = this.activeMenus.stream().filter(m -> m.getInventory()
-                .equals(event.getClickedInventory())).findFirst().orElse(null);
+                .equals(inventory)).findFirst().orElse(null);
         assert menu != null;
-
-        Map<Method, ClickListener> methods = menu.getMethods().stream()
-                .filter(method -> method.isAnnotationPresent(ClickListener.class))
-                .collect(Collectors.toMap(m -> m, m -> m.getDeclaredAnnotation(ClickListener.class)));
-        methods.forEach((method, data) -> {
-            if (data.slot() != event.getSlot()) return;
-            try {
-                if (method.getParameterCount() == 1 &&
-                    method.getParameterTypes()[0] == ClickContext.class) {
-                    ClickContext context = new ClickContext(event);
-                    method.invoke(menu, context);
-                } else {
-                    method.invoke(menu);
-                }
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
+        menu.handleClick(new ClickContext(event));
     }
 
     @EventHandler

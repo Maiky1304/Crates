@@ -6,6 +6,7 @@ import com.github.maiky1304.crates.database.models.User;
 import com.github.maiky1304.crates.listeners.JoinListener;
 import com.github.maiky1304.crates.listeners.QuitListener;
 import com.github.maiky1304.crates.loader.ExtendedJavaPlugin;
+import com.github.maiky1304.crates.manager.CrateManager;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public final class CratesPlugin extends ExtendedJavaPlugin {
 
     private UserManager userManager;
+    private CrateManager crateManager;
 
     @Override
     public void enable() {
@@ -27,6 +29,9 @@ public final class CratesPlugin extends ExtendedJavaPlugin {
             return;
         }
 
+        this.crateManager = new CrateManager(this);
+        this.crateManager.loadAllCrates();
+
         // Register listener(s)
         this.registerListener(new JoinListener(this));
         this.registerListener(new QuitListener(this));
@@ -37,6 +42,7 @@ public final class CratesPlugin extends ExtendedJavaPlugin {
 
     @Override
     public void disable() {
+        this.crateManager.saveAllCrates();
     }
 
 }

@@ -11,3 +11,5 @@ settings:
   # Set the cooldown which a player has to wait between opening crates,
   # time unit is seconds.
   cooldown: 5
+  # Max items per crate
+  max-items: 27

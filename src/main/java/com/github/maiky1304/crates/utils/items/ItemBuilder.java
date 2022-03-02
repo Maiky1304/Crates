@@ -15,7 +15,7 @@ public class ItemBuilder {
     private final ItemStack itemStack;
 
     private ItemBuilder(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        this.itemStack = itemStack.clone();
     }
 
     /**

@@ -2,6 +2,7 @@ package com.github.maiky1304.crates.loader;
 
 import com.github.maiky1304.crates.utils.command.Command;
 import com.github.maiky1304.crates.utils.config.Config;
+import com.github.maiky1304.crates.utils.menu.InventoryManager;
 import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -21,6 +22,8 @@ public abstract class ExtendedJavaPlugin extends JavaPlugin {
     private Config messages;
     private Config data;
 
+    private InventoryManager inventoryManager;
+
     public abstract void enable();
     public abstract void disable();
 
@@ -35,6 +38,10 @@ public abstract class ExtendedJavaPlugin extends JavaPlugin {
 
         this.data = new Config(this, "data.yml");
         this.data.load();
+
+        // Install Inventory Manager
+        this.inventoryManager = new InventoryManager();
+        this.registerListener(this.inventoryManager);
 
         // Invoke abstract enable method
         this.enable();

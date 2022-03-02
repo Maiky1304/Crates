@@ -1,13 +1,23 @@
 package com.github.maiky1304.crates.commands;
 
+import com.github.maiky1304.crates.CratesPlugin;
+import com.github.maiky1304.crates.gui.ConfirmMenu;
 import com.github.maiky1304.crates.utils.command.*;
+import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.text.Numbers;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 
-@CommandInfo(value = "crate", permission = "crates.admin")
+@RequiredArgsConstructor
+@CommandInfo(value = "crate", permission = "crates.admin", type = CommandType.PLAYERS)
 public class CrateCommand extends Command {
+
+    private final CratesPlugin instance;
 
     @DefaultCommand
     @SubCommandInfo("help")
@@ -45,8 +55,18 @@ public class CrateCommand extends Command {
             return;
         }
 
-        String name = context.getArgs()[0];
+        Player player = context.getPlayer();
+        if (player.getInventory().getItemInMainHand() == null) {
+            context.reply("&cJe moet een item in je hand hebben om dit te doen.");
+            return;
+        }
 
+        ItemStack item = player.getInventory().getItemInMainHand();
+        String name = context.getArgs()[0];
+        Crate crate = new Crate(name, item, Collections.emptyList());
+
+        ConfirmMenu confirmMenu = new ConfirmMenu(instance, context.getPlayer(), crate);
+        confirmMenu.open();
     }
 
     @SubCommandInfo(
@@ -75,6 +95,14 @@ public class CrateCommand extends Command {
         }
 
         String name = context.getArgs()[0];
+    }
+
+    @SubCommandInfo(
+            value = "give",
+            permission = "crates.admin.give",
+            usage = "<player> <crate> <amount>"
+    )
+    public void onGive(CommandContext context) {
     }
 
 }

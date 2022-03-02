@@ -32,7 +32,7 @@ public final class CratesPlugin extends ExtendedJavaPlugin {
         this.registerListener(new QuitListener(this));
 
         // Register command(s)
-        this.registerCommand(new CrateCommand());
+        this.registerCommand(new CrateCommand(this));
     }
 
     @Override

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
 @Getter
@@ -13,6 +14,14 @@ public class CommandContext {
     private final CommandSender sender;
     private final String label;
     private final String[] args;
+
+    /**
+     * Returns the Player if sender can be cast to a Player
+     * if not it will throw an error.
+     */
+    public Player getPlayer() {
+        return (Player) sender;
+    }
 
     /**
      * Send multiple lines to the CommandSender at once also

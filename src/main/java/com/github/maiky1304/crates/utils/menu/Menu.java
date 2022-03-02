@@ -1,31 +1,53 @@
 package com.github.maiky1304.crates.utils.menu;
 
+import com.github.maiky1304.crates.utils.text.Placeholder;
 import com.github.maiky1304.crates.utils.text.Text;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 public class Menu {
 
-    private final Inventory inventory;
-    private final MenuInfo menuInfo;
+    protected final Inventory inventory;
+    protected final MenuFlag[] flags;
+
+    private final Player player;
+
+    @Setter
+    protected MenuState menuState;
 
     private final HashMap<String, ItemStack> itemMapper = new HashMap<>();
 
-    public Menu() {
-        this.menuInfo = this.getClass().getDeclaredAnnotation(MenuInfo.class);
-        Objects.requireNonNull(this.menuInfo, "A menu requires a MenuInfo annotation!");
-        this.inventory = Bukkit.createInventory(null, this.menuInfo.rows() * 9,
-                Text.colors(menuInfo.title()));
+    public Menu(Player player, int rows, String title, MenuFlag... flags) {
+        this.player = player;
+        this.flags = flags;
+
+        this.inventory = Bukkit.createInventory(null, rows * 9, Text.colors(title));
+    }
+
+    /**
+     * Draw the menu by adding all items to it occurs before opening the inventory.
+     */
+    public void draw() {
+        Map<Method, ClickListener> methods = getMethods().stream()
+                .filter(method -> method.isAnnotationPresent(ClickListener.class))
+                .collect(Collectors.toMap(m -> m, m -> m.getDeclaredAnnotation(ClickListener.class)));
+        methods.forEach((method, cl) -> {
+            ItemStack itemStack = itemMapper.get(cl.itemId());
+            if (itemStack == null) {
+                throw new IllegalArgumentException(String.format("Item with ID %s cannot be found in item mapper, did you define it using Menu#defineItem?",
+                        cl.itemId()));
+            }
+            this.inventory.setItem(cl.slot(), itemStack);
+        });
     }
 
     /**
@@ -48,8 +70,17 @@ public class Menu {
      * Returns all declared methods that exist in the class
      * @return List of classes
      */
-    private List<Method> getMethods() {
+    protected List<Method> getMethods() {
         return Arrays.asList(getClass().getDeclaredMethods());
+    }
+
+    /**
+     * Opens the menu for the player provided
+     * in the constructor
+     */
+    public void open() {
+        this.draw();
+        this.player.openInventory(this.inventory);
     }
 
 }

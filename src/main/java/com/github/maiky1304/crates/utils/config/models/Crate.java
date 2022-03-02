@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Getter
 public class Crate {
 
+    private final String name;
     private final ItemStack boxItem;
     private final List<CrateItem> items;
 
@@ -25,12 +26,12 @@ public class Crate {
         return config;
     }
 
-    public static Crate fromConfig(ConfigurationSection config) {
+    public static Crate fromConfig(String name, ConfigurationSection config) {
         ItemStack itemStack = (ItemStack) config.get("item");
         List<CrateItem> items = config.getConfigurationSection("contents")
                 .getKeys(false).stream().map(config.getConfigurationSection("contents")::getConfigurationSection)
                 .map(CrateItem::fromConfig).collect(Collectors.toList());
-        return new Crate(itemStack, items);
+        return new Crate(name, itemStack, items);
     }
 
 }

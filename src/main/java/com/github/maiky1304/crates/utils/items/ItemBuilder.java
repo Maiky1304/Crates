@@ -19,6 +19,15 @@ public class ItemBuilder {
     }
 
     /**
+     * Edit's the item's amount
+     * @param amount
+     * @return instance of current class
+     */
+    public ItemBuilder setAmount(int amount) {
+        return editItem(item -> item.setAmount(amount));
+    }
+
+    /**
      * Edits the item's durability/data
      * @param data
      * @return instance of current class

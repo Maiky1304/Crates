@@ -3,6 +3,7 @@ package com.github.maiky1304.crates;
 import com.github.maiky1304.crates.commands.CrateCommand;
 import com.github.maiky1304.crates.database.manager.UserManager;
 import com.github.maiky1304.crates.database.models.User;
+import com.github.maiky1304.crates.listeners.CrateOpenListener;
 import com.github.maiky1304.crates.listeners.JoinListener;
 import com.github.maiky1304.crates.listeners.QuitListener;
 import com.github.maiky1304.crates.loader.ExtendedJavaPlugin;
@@ -35,6 +36,7 @@ public final class CratesPlugin extends ExtendedJavaPlugin {
         // Register listener(s)
         this.registerListener(new JoinListener(this));
         this.registerListener(new QuitListener(this));
+        this.registerListener(new CrateOpenListener(this));
 
         // Register command(s)
         this.registerCommand(new CrateCommand(this));

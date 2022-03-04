@@ -52,7 +52,6 @@ public class InventoryManager implements Listener {
         Menu menu = this.activeMenus.stream().filter(m -> m.getInventory()
                 .equals(event.getInventory())).findFirst().orElse(null);
         assert menu != null;
-        menu.setMenuState(MenuState.CLOSED);
 
         if (ArrayUtils.contains(menu.flags, MenuFlag.DESTROY_ON_CLOSE)) {
             destroyMenu(menu);

@@ -2,6 +2,7 @@ package com.github.maiky1304.crates.manager;
 
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.utils.config.models.Crate;
+import lombok.Getter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 
@@ -13,6 +14,7 @@ public class CrateManager {
 
     private final CratesPlugin instance;
 
+    @Getter
     private final List<Crate> loadedCrates = new ArrayList<>();
 
     public CrateManager(CratesPlugin instance) {

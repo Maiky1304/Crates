@@ -1,18 +1,19 @@
 package com.github.maiky1304.crates.utils.menu;
 
-import com.github.maiky1304.crates.utils.text.Placeholder;
 import com.github.maiky1304.crates.utils.text.Text;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -133,6 +134,10 @@ public class Menu {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void close() {
+        setMenuState(MenuState.CLOSED);
     }
 
     /**

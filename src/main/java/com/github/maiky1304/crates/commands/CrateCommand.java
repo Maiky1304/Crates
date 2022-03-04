@@ -7,19 +7,17 @@ import com.github.maiky1304.crates.utils.command.*;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.text.Numbers;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
 @CommandInfo(value = "crate", permission = "crates.admin", type = CommandType.PLAYERS)
-public class CrateCommand extends Command implements TabCompleter {
+public class CrateCommand extends Command {
 
     private final CratesPlugin instance;
 
@@ -53,6 +51,7 @@ public class CrateCommand extends Command implements TabCompleter {
             permission = "crates.admin.create",
             usage = "<name>"
     )
+    @TabInfo("crates")
     public void onCreate(CommandContext context) {
         if (context.getArgs().length != 1) {
             context.reply(String.format("&cUsage: /%s create <name>", context.getLabel()));
@@ -92,6 +91,7 @@ public class CrateCommand extends Command implements TabCompleter {
             permission = "crates.admin.delete",
             usage = "<name>"
     )
+    @TabInfo("crates")
     public void onDelete(CommandContext context) {
         if (context.getArgs().length != 1) {
             context.reply(String.format("&cUsage: /%s delete <name>", context.getLabel()));
@@ -145,12 +145,45 @@ public class CrateCommand extends Command implements TabCompleter {
             usage = "<player> <crate> <amount>"
     )
     public void onGive(CommandContext context) {
-        // TODO
-    }
+        if (context.getArgs().length != 3) {
+            context.reply(String.format("&cUsage: /%s give <player> <crate> <amount>",
+                    context.getLabel()));
+            return;
+        }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
-        return null;
+        String playerArg = context.getArgs()[0];
+        String crateArg = context.getArgs()[1];
+        String amountArg = context.getArgs()[2];
+
+        Player player = Bukkit.getPlayer(playerArg);
+        if (player == null) {
+            context.reply(String.format("&cThere's no player online with the username %s.",
+                    playerArg));
+            return;
+        }
+
+        Crate crate = instance.getCrateManager().findCrate(crateArg);
+        if (crate == null) {
+            context.reply(String.format("&cThere's no crate with the name %s.", crateArg));
+            return;
+        }
+
+        if (!Numbers.isInt(amountArg)) {
+            context.reply(String.format("&c%s is not a valid Integer.", amountArg));
+            return;
+        }
+
+        int amount = Numbers.toInt(amountArg);
+
+        if (player.getInventory().firstEmpty() == -1) {
+            context.reply(String.format("&cTell %s to make inventory space, because their inventory is full.",
+                    player.getName()));
+            return;
+        }
+
+        player.getInventory().addItem(crate.createItem(amount));
+        context.reply(String.format("&dSuccessfully given &7%s &7the crate &d%sx %s&7.",
+                player.getName(), amount, crate.getName()));
     }
 
 }

@@ -1,7 +1,6 @@
 package com.github.maiky1304.crates.utils.config.models;
 
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
-import com.github.maiky1304.crates.utils.items.ItemSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

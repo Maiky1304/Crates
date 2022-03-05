@@ -2,7 +2,6 @@ package com.github.maiky1304.crates.database.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

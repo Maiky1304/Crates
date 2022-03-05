@@ -20,10 +20,10 @@ public class ConfirmMenu extends Menu {
     private final CratesPlugin instance;
     private final Consumer<Player> consumer;
 
-    public ConfirmMenu(CratesPlugin instance, Player player, Crate crate, Consumer<Player> consumer) {
+    public ConfirmMenu(CratesPlugin instance, Player player, Crate crate, int rows, Consumer<Player> consumer) {
         super(
                 player,
-                4,
+                rows,
                 "Confirm action"
         );
 
@@ -47,7 +47,7 @@ public class ConfirmMenu extends Menu {
     }
 
     @ClickListener(
-            slot = 20,
+            slot = 11,
             itemId = "confirm_item"
     )
     public void confirmButton(ClickContext context) {
@@ -55,7 +55,7 @@ public class ConfirmMenu extends Menu {
     }
 
     @ClickListener(
-            slot = 24,
+            slot = 15,
             itemId = "cancel_item"
     )
     public void cancelButton(ClickContext context) {

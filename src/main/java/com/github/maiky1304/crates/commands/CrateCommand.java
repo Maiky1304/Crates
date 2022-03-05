@@ -86,7 +86,7 @@ public class CrateCommand extends Command {
         Crate crate = new Crate(name, item, new ArrayList<>());
 
         ConfirmMenu confirmMenu = new ConfirmMenu(instance,
-                context.getPlayer(), crate, user -> {
+                context.getPlayer(), crate, 3, user -> {
             instance.getCrateManager().addCrate(crate);
 
             context.reply(Arrays.toString(instance.getConfiguration().getStringList(Message.CRATE_CREATED)
@@ -117,7 +117,7 @@ public class CrateCommand extends Command {
         }
 
         ConfirmMenu confirmMenu = new ConfirmMenu(instance,
-                context.getPlayer(), crate, user -> {
+                context.getPlayer(), crate, 3, user -> {
             instance.getCrateManager().removeCrate(crate);
 
             context.reply(instance.getMessages().getString(Message.CRATE_DELETED).replaceAll("%crate_name%", crate.getName()));

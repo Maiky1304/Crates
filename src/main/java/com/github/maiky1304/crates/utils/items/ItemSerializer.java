@@ -1,6 +1,5 @@
 package com.github.maiky1304.crates.utils.items;
 
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;

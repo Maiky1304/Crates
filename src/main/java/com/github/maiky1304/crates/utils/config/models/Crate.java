@@ -38,8 +38,6 @@ public class Crate {
      * @return the item created
      */
     public ItemStack createItem(int amount) {
-        System.out.println(this);
-
         return ItemBuilder.of(boxItem)
                 .setName("&b" + name + " Crate")
                 .setAmount(amount)

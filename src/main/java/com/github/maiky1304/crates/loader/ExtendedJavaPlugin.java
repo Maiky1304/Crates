@@ -72,6 +72,7 @@ public abstract class ExtendedJavaPlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand(command.getInfo().value()), String.format("It looks like you haven't registered the command /%s in your plugin.yml yet!",
                 command.getInfo().value()));
         getCommand(command.getInfo().value()).setExecutor(command);
+        getCommand(command.getInfo().value()).setTabCompleter(command);
     }
 
 }

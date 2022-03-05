@@ -7,9 +7,7 @@ import com.github.maiky1304.crates.utils.command.*;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.config.types.Message;
 import com.github.maiky1304.crates.utils.text.Numbers;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +15,22 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @CommandInfo(value = "crate", permission = "crates.admin", type = CommandType.PLAYERS)
 public class CrateCommand extends Command {
 
     private final CratesPlugin instance;
+
+    public CrateCommand(CratesPlugin instance) {
+        this.instance = instance;
+
+        this.defineTabCompletion("crates", ctx -> instance.getCrateManager().getLoadedCrates()
+                .stream().map(Crate::getName).collect(Collectors.toList()));
+        this.defineTabCompletion("players", ctx -> Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName).collect(Collectors.toList()));
+    }
+
 
     @DefaultCommand
     @SubCommandInfo("help")
@@ -54,7 +62,6 @@ public class CrateCommand extends Command {
             permission = "crates.admin.create",
             usage = "<name>"
     )
-    @TabInfo("crates")
     public void onCreate(CommandContext context) {
         if (context.getArgs().length != 1) {
             context.reply(String.format("&cUsage: /%s create <name>", context.getLabel()));
@@ -124,6 +131,7 @@ public class CrateCommand extends Command {
             permission = "crates.admin.edit",
             usage = "<name>"
     )
+    @TabInfo("crates")
     public void onEdit(CommandContext context) {
         if (context.getArgs().length != 1) {
             context.reply(String.format("&cUsage: /%s edit <name>", context.getLabel()));
@@ -147,6 +155,7 @@ public class CrateCommand extends Command {
             permission = "crates.admin.give",
             usage = "<player> <crate> <amount>"
     )
+    @TabInfo("players crates")
     public void onGive(CommandContext context) {
         if (context.getArgs().length != 3) {
             context.reply(String.format("&cUsage: /%s give <player> <crate> <amount>",

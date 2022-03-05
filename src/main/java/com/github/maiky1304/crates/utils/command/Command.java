@@ -1,18 +1,18 @@
 package com.github.maiky1304.crates.utils.command;
 
+import com.github.maiky1304.crates.utils.data.Pair;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -20,9 +20,10 @@ import java.util.stream.Collectors;
  * needs to be registered the regular way through JavaPlugin.
  */
 @Getter
-public abstract class Command implements CommandExecutor {
+public abstract class Command implements CommandExecutor, TabExecutor {
 
     private final CommandInfo info;
+    private final HashMap<String, Function<CommandContext, List<String>>> tabCompleters = new HashMap<>();
 
     public Command() {
         this.info = getClass().getDeclaredAnnotation(CommandInfo.class);
@@ -77,6 +78,51 @@ public abstract class Command implements CommandExecutor {
             subCommandMethod.invoke(this, context);
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            return findSubCommands().values().stream()
+                    .map(SubCommandInfo::value).collect(Collectors.toList());
+        }
+
+        String argument = args[0];
+        return findTabAnnotations()
+                .values()
+                .stream()
+                .filter(pair -> pair.getKey().value().equals(argument))
+                .findFirst()
+                .map(pair -> {
+                    if (pair.getValue().value().split(" ").length <= (args.length - 2))
+                        return null;
+
+                    String id = pair.getValue().value().split(" ")[args.length - 2];
+                    return this.tabCompleters.containsKey(id) ?
+                            this.tabCompleters.get(id).apply(new CommandContext(sender, alias, args))
+                            : null;
+                }).orElse(null);
+    }
+
+    /**
+     * Defines a tab completer inside the map
+     * @param id
+     * @param function
+     */
+    public void defineTabCompletion(String id, Function<CommandContext, List<String>> function) {
+        this.tabCompleters.put(id, function);
+    }
+
+    /**
+     * Finds all the methods that have the TabInfo and SubCommandInfo annotation
+     * then maps them to the method as the key and the instance of the annotation
+     * of the annotation as the value.
+     * @return a key value pair map with the methods and subcommand info data.
+     */
+    private Map<Method, Pair<SubCommandInfo, TabInfo>> findTabAnnotations() {
+        return getMethods().stream().filter(method -> method.isAnnotationPresent(TabInfo.class) && method.isAnnotationPresent(SubCommandInfo.class))
+                .collect(Collectors.toMap(method -> method, method -> new Pair<>(method.getDeclaredAnnotation(SubCommandInfo.class),
+                        method.getDeclaredAnnotation(TabInfo.class))));
     }
 
     /**

@@ -4,12 +4,17 @@ import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.gui.animations.GlassAnimation;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.config.models.CrateItem;
+import com.github.maiky1304.crates.utils.config.types.Message;
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
 import com.github.maiky1304.crates.utils.menu.Menu;
 import com.github.maiky1304.crates.utils.menu.MenuFlag;
 import com.github.maiky1304.crates.utils.random.RandomUtil;
+import com.github.maiky1304.crates.utils.text.Text;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import java.text.DecimalFormat;
 
 public class DrawingMenu extends Menu {
 
@@ -51,6 +56,17 @@ public class DrawingMenu extends Menu {
                     : reward.getItem());
             if (reward != null) {
                 this.getPlayer().getInventory().addItem(reward.getItem());
+
+                String itemName = reward.getItem().hasItemMeta() && reward.getItem().getItemMeta().hasDisplayName()
+                        ? reward.getItem().getItemMeta().getDisplayName() : StringUtils.capitalize(reward.getItem().getType().toString().toLowerCase()
+                        .replaceAll("_", " "));
+                String chance = new DecimalFormat("0.00").format(reward.getChance());
+
+                this.getPlayer().sendMessage(Text.colors(
+                        instance.getMessages().getString(Message.REWARD_CRATE)
+                                .replaceAll("%item_name%", itemName)
+                                .replaceAll("%item_chance%", chance)
+                ));
             }
         }
     }

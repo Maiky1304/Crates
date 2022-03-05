@@ -35,6 +35,14 @@ public class UserManager implements DatabaseManager<User> {
         CompletableFuture.runAsync(() -> database.run("CREATE TABLE IF NOT EXISTS `users` (`uuid` VARCHAR(48) NOT NULL, `last_crate` BIGINT NULL, `crates_today` INT(32) NULL, PRIMARY KEY (`uuid`))"));
     }
 
+    public void saveAllUsers() {
+        CompletableFuture.runAsync(() -> {
+            for (User user : cache.values()) {
+                updateUser(user);
+            }
+        });
+    }
+
     public CompletableFuture<User> createUser(Player player) {
         return CompletableFuture.supplyAsync(() -> {
             User user = new User();

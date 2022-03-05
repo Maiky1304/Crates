@@ -2,15 +2,18 @@ package com.github.maiky1304.crates.gui;
 
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.utils.config.models.Crate;
+import com.github.maiky1304.crates.utils.config.types.Message;
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
 import com.github.maiky1304.crates.utils.menu.ClickContext;
 import com.github.maiky1304.crates.utils.menu.ClickListener;
 import com.github.maiky1304.crates.utils.menu.Menu;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.function.Consumer;
 
+@Getter
 public class ConfirmMenu extends Menu {
 
     private final Crate crate;
@@ -20,7 +23,7 @@ public class ConfirmMenu extends Menu {
     public ConfirmMenu(CratesPlugin instance, Player player, Crate crate, Consumer<Player> consumer) {
         super(
                 player,
-                3,
+                4,
                 "Confirm action"
         );
 
@@ -44,7 +47,7 @@ public class ConfirmMenu extends Menu {
     }
 
     @ClickListener(
-            slot = 12,
+            slot = 20,
             itemId = "confirm_item"
     )
     public void confirmButton(ClickContext context) {
@@ -52,12 +55,12 @@ public class ConfirmMenu extends Menu {
     }
 
     @ClickListener(
-            slot = 14,
+            slot = 24,
             itemId = "cancel_item"
     )
     public void cancelButton(ClickContext context) {
         context.getPlayer().closeInventory();
-        context.reply("&cThis action was successfully cancelled.");
+        context.reply(instance.getMessages().getString(Message.ACTION_CANCELLED));
     }
 
 }

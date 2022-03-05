@@ -1,5 +1,6 @@
 package com.github.maiky1304.crates.gui.animations;
 
+import com.cryptomorin.xseries.XSound;
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.utils.data.Pair;
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
@@ -10,7 +11,6 @@ import com.github.maiky1304.crates.utils.sounds.SoundUtil;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,10 +36,10 @@ public class GlassAnimation extends MenuAnimation {
         getMenu().drawItem(frame.getValue(), ItemBuilder.of(Material.STAINED_GLASS_PANE)
                 .setData(color2.durability).setName(color2.color + "...").build());
 
-        SoundUtil.playSound(getMenu().getPlayer(), Sound.BLOCK_NOTE_PLING);
+        SoundUtil.playSound(getMenu().getPlayer(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound());
 
         // Means that the animation is 1 item away (empty slot for reward)
-        if (frame.getKey() >= (Math.floor(getMenu().getInventory().getSize() / 2d) - 1)) {
+        if (frame.getKey() == 21) {
             this.finish();
         }
     }
@@ -68,7 +68,6 @@ public class GlassAnimation extends MenuAnimation {
         RED(14, ChatColor.DARK_RED),
         BLACK(15, ChatColor.BLACK);
 
-        private final Material item = Material.STAINED_GLASS_PANE;
         private final int durability;
         private final ChatColor color;
 

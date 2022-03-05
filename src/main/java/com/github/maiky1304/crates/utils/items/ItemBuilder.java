@@ -1,12 +1,14 @@
 package com.github.maiky1304.crates.utils.items;
 
 import com.github.maiky1304.crates.utils.text.Text;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ItemBuilder {
@@ -85,10 +87,27 @@ public class ItemBuilder {
     }
 
     /**
+     * Serialize the item to base64
+     * @return base64 string
+     */
+    public String serialize() {
+        return ItemSerializer.toBase64(this.itemStack);
+    }
+
+    /**
      * @return the fully modified & built ItemStack
      */
     public ItemStack build() {
         return this.itemStack;
+    }
+
+    /**
+     * Creates a new instance of ItemBuilder using a given base64 string
+     * @param base64
+     * @return new instance of ItemBuilder
+     */
+    public static ItemBuilder of(String base64) {
+        return new ItemBuilder(Objects.requireNonNull(ItemSerializer.fromBase64(base64)));
     }
 
     /**

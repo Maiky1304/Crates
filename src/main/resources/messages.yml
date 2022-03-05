@@ -1,0 +1,25 @@
+errors:
+  invalid-number: "&cThis is not a valid number."
+  invalid-number-or-double: "&cThe input is not a valid integer or double, the action was cancelled."
+  crate-exists: "&cA crate with this name already exists!"
+  need-item-hand: "&cYou need an item in your hand to do this."
+  crate-not-found: "&cCan't find a crate with that name."
+  not-online: "&cThere's no player online with the username %name%."
+  inventory-full: "&cTell %name% to make inventory space, because their inventory is full."
+  crate-max-items: "&cThis crate has reached the config set maximum amount of items a crate can hold!"
+  crate-daily-limit: "&cYou can't open anymore crates today, try again tomorrow!"
+  crate-cooldown: "&cYou have to wait a little bit more before you can open up another crate."
+
+regular:
+  crate-created:
+    - "&dYou've successfully created a crate with the name &7%crate_name%&d."
+    - "&dEdit it using &7/crate edit %crate_name%&d."
+  crate-deleted: "&dYou've successfully deleted a crate with the name &7%crate_name%&d."
+  crate-given: "&dSuccessfully given &7%name% &dthe crate &7%amount%x %crate_name%&d."
+  action-cancelled: "&cThis action was successfully cancelled."
+  crate-item-added: "&dYou have successfully added the item you clicked to the crate &7%crate_name%&d."
+  crate-item-removed: "&dYou have successfully removed this item from the crate &7%crate_name%&d."
+  crate-enter-new-chance: "&dEnter the new &7chance &dfor this crate in the chat:"
+  chance-set: "&dYou have successfully set the chance of this item to &7%.2f&d."
+  opening-crate: "&dYou're now opening the crate &7%crate_name%&d..."
+  reward-crate: "&dYou've won &7%item_name% &dthe chance to win this was &7%item_chance%%&d."

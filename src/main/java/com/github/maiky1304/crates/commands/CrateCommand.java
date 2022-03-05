@@ -5,14 +5,17 @@ import com.github.maiky1304.crates.gui.ConfirmMenu;
 import com.github.maiky1304.crates.gui.EditMenu;
 import com.github.maiky1304.crates.utils.command.*;
 import com.github.maiky1304.crates.utils.config.models.Crate;
+import com.github.maiky1304.crates.utils.config.types.Message;
 import com.github.maiky1304.crates.utils.text.Numbers;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class CrateCommand extends Command {
 
         if (context.getArgs().length != 0) {
             if (!Numbers.isInt(context.getArgs()[0])) {
-                context.reply(ChatColor.RED + "This is not a valid number.");
+                context.reply(instance.getMessages().getString(Message.INVALID_NUMBER));
                 return;
             } else page = Numbers.toInt(context.getArgs()[0]);
         }
@@ -61,13 +64,14 @@ public class CrateCommand extends Command {
         String name = context.getArgs()[0];
 
         if (instance.getCrateManager().findCrate(name) != null) {
-            context.reply("&cA crate with this name already exists!");
+            context.reply(instance.getMessages().getString(Message.CRATE_EXISTS));
             return;
         }
 
         Player player = context.getPlayer();
-        if (player.getInventory().getItemInMainHand() == null) {
-            context.reply("&cYou need an item in your hand to do this.");
+        if (player.getInventory().getItemInMainHand() == null
+            || player.getInventory().getItemInMainHand().getType() == Material.AIR) {
+            context.reply(instance.getMessages().getString(Message.NEED_ITEM_HAND));
             return;
         }
 
@@ -78,9 +82,8 @@ public class CrateCommand extends Command {
                 context.getPlayer(), crate, user -> {
             instance.getCrateManager().addCrate(crate);
 
-            context.reply(String.format("&dYou've successfully created a crate with the name &7%s&d.",
-                    crate.getName()));
-            context.reply(String.format("&dEdit it using &7/crate edit %s&d.", crate.getName()));
+            context.reply(Arrays.toString(instance.getConfiguration().getStringList(Message.CRATE_CREATED)
+                    .stream().map(line -> line.replaceAll("%crate_name%", crate.getName())).toArray()));
             context.getPlayer().closeInventory();
         });
         confirmMenu.open();
@@ -102,7 +105,7 @@ public class CrateCommand extends Command {
         Crate crate = instance.getCrateManager().findCrate(name);
 
         if (crate == null) {
-            context.reply("&cCan't find a crate with that name.");
+            context.reply(instance.getMessages().getString(Message.CRATE_NOT_FOUND));
             return;
         }
 
@@ -110,10 +113,10 @@ public class CrateCommand extends Command {
                 context.getPlayer(), crate, user -> {
             instance.getCrateManager().removeCrate(crate);
 
-            context.reply(String.format("&dYou've successfully deleted a crate with the name &7%s&d.",
-                    crate.getName()));
+            context.reply(instance.getMessages().getString(Message.CRATE_DELETED).replaceAll("%crate_name%", crate.getName()));
             context.getPlayer().closeInventory();
         });
+        confirmMenu.open();
     }
 
     @SubCommandInfo(
@@ -131,7 +134,7 @@ public class CrateCommand extends Command {
         Crate crate = instance.getCrateManager().findCrate(name);
 
         if (crate == null) {
-            context.reply("&cCan't find a crate with that name.");
+            context.reply(instance.getMessages().getString(Message.CRATE_NOT_FOUND));
             return;
         }
 
@@ -157,33 +160,34 @@ public class CrateCommand extends Command {
 
         Player player = Bukkit.getPlayer(playerArg);
         if (player == null) {
-            context.reply(String.format("&cThere's no player online with the username %s.",
-                    playerArg));
+            context.reply(instance.getMessages().getString(Message.NOT_ONLINE).replaceAll("%name%", playerArg));
             return;
         }
 
         Crate crate = instance.getCrateManager().findCrate(crateArg);
         if (crate == null) {
-            context.reply(String.format("&cThere's no crate with the name %s.", crateArg));
+            context.reply(instance.getMessages().getString(Message.CRATE_NOT_FOUND));
             return;
         }
 
         if (!Numbers.isInt(amountArg)) {
-            context.reply(String.format("&c%s is not a valid Integer.", amountArg));
+            context.reply(instance.getMessages().getString(Message.INVALID_NUMBER));
             return;
         }
 
         int amount = Numbers.toInt(amountArg);
 
         if (player.getInventory().firstEmpty() == -1) {
-            context.reply(String.format("&cTell %s to make inventory space, because their inventory is full.",
-                    player.getName()));
+            context.reply(instance.getMessages().getString(Message.INVENTORY_FULL)
+                    .replaceAll("%name%", player.getName()));
             return;
         }
 
         player.getInventory().addItem(crate.createItem(amount));
-        context.reply(String.format("&dSuccessfully given &7%s &dthe crate &7%sx %s&d.",
-                player.getName(), amount, crate.getName()));
+        context.reply(instance.getMessages().getString(Message.CRATE_GIVEN)
+                .replaceAll("%name%", player.getName())
+                .replaceAll("%amount%", amountArg)
+                .replaceAll("%crate_name%", crate.getName()));
     }
 
 }

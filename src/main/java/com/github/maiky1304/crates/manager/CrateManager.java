@@ -28,7 +28,7 @@ public class CrateManager {
      */
     public Crate findCrate(String name) {
         return loadedCrates.stream()
-                .filter(crate -> crate.getName().toLowerCase().equals(name.toLowerCase()))
+                .filter(crate -> crate.getName().equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }

@@ -41,6 +41,7 @@ public final class CratesPlugin extends ExtendedJavaPlugin {
     @Override
     public void disable() {
         this.crateManager.saveAllCrates();
+        this.userManager.saveAllUsers();
     }
 
 }

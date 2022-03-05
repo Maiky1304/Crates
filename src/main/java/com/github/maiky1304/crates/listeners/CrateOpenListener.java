@@ -2,9 +2,11 @@ package com.github.maiky1304.crates.listeners;
 
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.database.models.User;
-import com.github.maiky1304.crates.gui.ConfirmMenu;
 import com.github.maiky1304.crates.gui.DrawingMenu;
+import com.github.maiky1304.crates.gui.OpenConfirmMenu;
 import com.github.maiky1304.crates.utils.config.models.Crate;
+import com.github.maiky1304.crates.utils.config.types.Message;
+import com.github.maiky1304.crates.utils.config.types.Option;
 import com.github.maiky1304.crates.utils.text.Text;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.time.DateUtils;
@@ -31,18 +33,26 @@ public class CrateOpenListener implements Listener {
         if (instance.getCrateManager().getLoadedCrates().stream()
                 .noneMatch(crate -> crate.isCrateItem(handItem))) return;
 
+        event.setCancelled(true);
+
         Crate crate = instance.getCrateManager().getLoadedCrates().stream()
                 .filter(c -> c.isCrateItem(handItem)).findFirst().orElse(null);
         assert crate != null;
 
-        ConfirmMenu confirmMenu = new ConfirmMenu(instance, event.getPlayer(), crate, player -> {
+        OpenConfirmMenu confirmMenu = new OpenConfirmMenu(instance, event.getPlayer(), crate, player -> {
             User user = instance.getUserManager().getCache().get(event.getPlayer().getUniqueId());
             if (!DateUtils.isSameDay(new Date(), new Date(user.getLastCrateTimestamp()))) {
                 user.setCratesToday(0);
             }
 
-            if (user.getCratesToday() >= instance.getConfiguration().getInt("settings.per-day")) {
-                event.getPlayer().sendMessage(Text.colors("&cYou can't open anymore crates today, try again tomorrow!"));
+            if (user.getCratesToday() >= instance.getConfiguration().getInt(Option.CRATES_PER_DAY)) {
+                event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_DAILY_LIMIT)));
+                return;
+            }
+
+            if ((user.getLastCrateTimestamp() + (instance.getConfiguration().getInt(Option.CRATES_COOLDOWN)))
+            > System.currentTimeMillis()) {
+                event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_COOLDOWN)));
                 return;
             }
 
@@ -54,7 +64,7 @@ public class CrateOpenListener implements Listener {
             DrawingMenu menu = new DrawingMenu(instance, event.getPlayer(), crate);
             menu.open();
 
-            event.getPlayer().sendMessage(Text.colors(String.format("&dYou're now opening the crate &7%s&d...",
+            event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.OPENING_CRATE).replaceAll("%crate_name%",
                     crate.getName())));
         });
         confirmMenu.open();

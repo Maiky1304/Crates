@@ -107,7 +107,7 @@ public class Menu {
      * @return List of classes
      */
     protected List<Method> getMethods() {
-        return Arrays.asList(getClass().getDeclaredMethods());
+        return Arrays.asList(getClass().getMethods());
     }
 
     /**

@@ -30,10 +30,11 @@ public class RandomUtil {
         double sum = list.stream().map(extractor).reduce(0d, (acc, cur) -> acc += cur);
         int random = ThreadLocalRandom.current().nextInt(0, (int) sum);
 
+
         for (T item : list) {
             double weight = extractor.apply(item);
             random -= (int) weight;
-            if (random < weight) {
+            if (random <= weight) {
                 return item;
             }
         }

@@ -1,5 +1,7 @@
 package com.github.maiky1304.crates.utils.config.models;
 
+import com.github.maiky1304.crates.utils.items.ItemBuilder;
+import com.github.maiky1304.crates.utils.items.ItemSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,13 +18,13 @@ public class CrateItem {
 
     public MemoryConfiguration toConfig() {
         MemoryConfiguration config = new MemoryConfiguration();
-        config.set("item", item);
+        config.set("item", ItemBuilder.of(item).serialize());
         config.set("chance", chance);
         return config;
     }
 
     public static CrateItem fromConfig(ConfigurationSection config) {
-        ItemStack itemStack = (ItemStack) config.get("item");
+        ItemStack itemStack = ItemBuilder.of(config.getString("item")).build();
         double chance = config.getDouble("chance", 0d);
         return new CrateItem(itemStack, chance);
     }

@@ -4,17 +4,20 @@ import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.gui.listeners.CrateItemChanceListener;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.config.models.CrateItem;
+import com.github.maiky1304.crates.utils.config.types.Message;
 import com.github.maiky1304.crates.utils.config.types.Option;
 import com.github.maiky1304.crates.utils.data.Pair;
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
 import com.github.maiky1304.crates.utils.menu.ClickContext;
 import com.github.maiky1304.crates.utils.menu.Menu;
 import com.github.maiky1304.crates.utils.text.Numbers;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EditMenu extends Menu {
@@ -80,7 +83,7 @@ public class EditMenu extends Menu {
                 if (!isPlayerInventory) return;
 
                 if (crate.getItems().size() >= instance.getConfiguration().getInt(Option.CRATES_MAX_ITEMS)) {
-                    context.reply("&cThis crate has reached the config set maximum amount of items a crate can hold!");
+                    context.reply(instance.getMessages().getString(Message.CRATE_MAX_ITEMS));
                     return;
                 }
 
@@ -93,8 +96,8 @@ public class EditMenu extends Menu {
                 this.crate.getItems().add(itemToAdd);
                 this.draw();
 
-                context.reply(String.format("&dYou have successfully added the item you clicked to the crate &7%s&d.",
-                        this.crate.getName()));
+                context.reply(instance.getMessages().getString(Message.CRATE_ITEM_ADDED).replaceAll("%crate_name%",
+                        crate.getName()));
                 break;
             case RIGHT:
                 // Remove item
@@ -106,7 +109,8 @@ public class EditMenu extends Menu {
                 this.crate.getItems().remove(crateItemToRemove);
                 this.draw();
 
-                context.reply("&dYou have successfully removed this item from the crate.");
+                context.reply(instance.getMessages().getString(Message.CRATE_ITEM_REMOVED).replaceAll("%crate_name%",
+                        crate.getName()));
                 break;
             case SHIFT_LEFT:
                 // Set chance
@@ -114,7 +118,7 @@ public class EditMenu extends Menu {
                 if (!isCrateItem) return;
 
                 context.getPlayer().closeInventory();
-                context.reply("&dEnter the new &7chance &dfor this crate in the chat:");
+                context.reply(instance.getMessages().getString(Message.CRATE_ENTER_NEW_CHANCE));
 
                 CrateItem crateItemToEdit = this.crateItemMapper.get(context.getEvent().getSlot());
 
@@ -122,17 +126,17 @@ public class EditMenu extends Menu {
                         (player, input) -> {
                             if (!Numbers.isDouble(input)) {
                                 this.open();
-                                context.reply("&cThe input is not a valid integer or double, the action was cancelled.");
+                                context.reply(instance.getMessages().getString(Message.INVALID_NUMBER_OR_DOUBLE));
                                 return;
                             }
 
                             double chance = Numbers.toDouble(input);
                             crateItemToEdit.setChance(chance);
 
-                            this.open();
+                            // Inventory open has to be sync because of Bukkit API limitations.
+                            Bukkit.getScheduler().runTask(instance, this::open);
 
-                            context.reply(String.format("&dYou have successfully set the chance of this item to &7%.2f&d.",
-                                    chance));
+                            context.reply(String.format(instance.getMessages().getString(Message.CHANCE_SET), chance));
                         });
                 instance.registerListener(listener);
                 break;

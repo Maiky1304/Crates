@@ -1,8 +1,10 @@
 package com.github.maiky1304.crates.utils.config.models;
 
 import com.github.maiky1304.crates.utils.items.ItemBuilder;
+import com.github.maiky1304.crates.utils.items.ItemSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
+@ToString(exclude = { "items" })
 public class Crate {
 
     private final String name;
@@ -35,6 +38,8 @@ public class Crate {
      * @return the item created
      */
     public ItemStack createItem(int amount) {
+        System.out.println(this);
+
         return ItemBuilder.of(boxItem)
                 .setName("&b" + name + " Crate")
                 .setAmount(amount)
@@ -46,14 +51,14 @@ public class Crate {
 
     public MemoryConfiguration toConfig() {
         MemoryConfiguration config = new MemoryConfiguration();
-        config.set("item", boxItem);
+        config.set("item", ItemBuilder.of(boxItem).serialize());
         AtomicInteger ai = new AtomicInteger(0);
         config.set("contents", items.stream().collect(Collectors.toMap(u -> ai.getAndIncrement(), CrateItem::toConfig)));
         return config;
     }
 
     public static Crate fromConfig(String name, ConfigurationSection config) {
-        ItemStack itemStack = (ItemStack) config.get("item");
+        ItemStack itemStack = ItemBuilder.of(config.getString("item")).build();
         List<CrateItem> items = config.getConfigurationSection("contents")
                 .getKeys(false).stream().map(config.getConfigurationSection("contents")::getConfigurationSection)
                 .map(CrateItem::fromConfig).collect(Collectors.toList());

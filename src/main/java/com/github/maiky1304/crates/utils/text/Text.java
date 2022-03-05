@@ -1,6 +1,5 @@
 package com.github.maiky1304.crates.utils.text;
 
-import com.github.maiky1304.crates.utils.command.CommandInfo;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
 

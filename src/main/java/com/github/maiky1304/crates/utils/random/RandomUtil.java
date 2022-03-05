@@ -1,11 +1,9 @@
 package com.github.maiky1304.crates.utils.random;
 
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @UtilityClass

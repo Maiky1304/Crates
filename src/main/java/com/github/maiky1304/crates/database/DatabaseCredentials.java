@@ -1,6 +1,8 @@
 package com.github.maiky1304.crates.database;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)

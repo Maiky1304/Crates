@@ -2,7 +2,6 @@ package com.github.maiky1304.crates.utils.items;
 
 import com.github.maiky1304.crates.utils.text.Text;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 

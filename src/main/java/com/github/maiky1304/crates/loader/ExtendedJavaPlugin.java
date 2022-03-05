@@ -4,7 +4,6 @@ import com.github.maiky1304.crates.utils.command.Command;
 import com.github.maiky1304.crates.utils.config.Config;
 import com.github.maiky1304.crates.utils.menu.InventoryManager;
 import lombok.Getter;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 

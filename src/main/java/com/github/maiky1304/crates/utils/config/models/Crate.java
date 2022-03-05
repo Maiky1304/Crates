@@ -27,7 +27,6 @@ public class Crate {
      * @return true or false
      */
     public boolean isCrateItem(ItemStack item) {
-        System.out.println(item.isSimilar(createItem(1)));
         return item.isSimilar(createItem(1));
     }
 

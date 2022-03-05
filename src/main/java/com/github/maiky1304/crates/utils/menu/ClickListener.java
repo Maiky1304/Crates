@@ -1,7 +1,5 @@
 package com.github.maiky1304.crates.utils.menu;
 
-import org.bukkit.inventory.ItemStack;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

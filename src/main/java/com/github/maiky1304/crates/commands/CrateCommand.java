@@ -182,7 +182,7 @@ public class CrateCommand extends Command {
         }
 
         player.getInventory().addItem(crate.createItem(amount));
-        context.reply(String.format("&dSuccessfully given &7%s &7the crate &d%sx %s&7.",
+        context.reply(String.format("&dSuccessfully given &7%s &dthe crate &7%sx %s&d.",
                 player.getName(), amount, crate.getName()));
     }
 

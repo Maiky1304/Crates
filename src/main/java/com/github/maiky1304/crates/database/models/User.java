@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -17,13 +16,17 @@ public class User {
     private long lastCrateTimestamp;
     private int cratesToday;
 
-    @SneakyThrows(SQLException.class)
     public static User fromResultSet(ResultSet resultSet) {
-        User user = new User();
-        user.uuid = UUID.fromString(resultSet.getString("uuid"));
-        user.lastCrateTimestamp = resultSet.getLong("last_crate");
-        user.cratesToday = resultSet.getInt("crates_today");
-        return user;
+        try {
+            User user = new User();
+            user.uuid = UUID.fromString(resultSet.getString("uuid"));
+            user.lastCrateTimestamp = resultSet.getLong("last_crate");
+            user.cratesToday = resultSet.getInt("crates_today");
+            return user;
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 
     public HashMap<String, Object> toDataObject() {

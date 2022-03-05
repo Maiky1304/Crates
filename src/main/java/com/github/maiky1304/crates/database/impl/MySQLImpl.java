@@ -6,10 +6,8 @@ import com.github.maiky1304.crates.database.SQLConsumer;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.function.Function;
 
 public class MySQLImpl implements Database {
 
@@ -29,16 +27,19 @@ public class MySQLImpl implements Database {
     }
 
     @Override
-    public ResultSet query(String query, SQLConsumer<PreparedStatement> psc) {
+    public <T> T query(String query, SQLConsumer<PreparedStatement> psc, Class<T> clazz, Function<ResultSet, T> function) {
         try (Connection connection = dataSource.getConnection(); PreparedStatement statement
                 = connection.prepareStatement(query)) {
             psc.accept(statement);
 
-            return statement.executeQuery();
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return function.apply(rs);
+            }
+            return null;
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
-
         return null;
     }
 
@@ -53,4 +54,16 @@ public class MySQLImpl implements Database {
         }
         return false;
     }
+
+    @Override
+    public boolean run(String query) {
+        try (Connection connection = dataSource.getConnection(); Statement statement
+                = connection.createStatement()) {
+            return statement.execute(query);
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
+
 }

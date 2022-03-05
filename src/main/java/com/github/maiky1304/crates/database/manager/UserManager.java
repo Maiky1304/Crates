@@ -6,8 +6,6 @@ import com.github.maiky1304.crates.database.DatabaseManager;
 import com.github.maiky1304.crates.database.QueryResult;
 import com.github.maiky1304.crates.database.impl.MySQLImpl;
 import com.github.maiky1304.crates.database.models.User;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -33,6 +31,8 @@ public class UserManager implements DatabaseManager<User> {
         }
 
         this.database = new MySQLImpl(DatabaseCredentials.fromConfig(mysql));
+
+        CompletableFuture.runAsync(() -> database.run("CREATE TABLE IF NOT EXISTS `users` (`uuid` VARCHAR(48) NOT NULL, `last_crate` BIGINT NULL, `crates_today` INT(32) NULL, PRIMARY KEY (`uuid`))"));
     }
 
     public CompletableFuture<User> createUser(Player player) {
@@ -58,10 +58,10 @@ public class UserManager implements DatabaseManager<User> {
 
     @Override
     public CompletableFuture<User> find(String field, Object value) {
-        String query = String.format("SELECT * FROM `users` WHERE %s=?", field);
+        String query = String.format("SELECT * FROM `users` WHERE `%s`=?", field);
         return CompletableFuture.supplyAsync(() -> database.query(query, ps -> {
             ps.setObject(1, value);
-        })).thenApply(User::fromResultSet);
+        }, User.class, User::fromResultSet));
     }
 
     @Override

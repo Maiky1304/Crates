@@ -1,6 +1,5 @@
 package com.github.maiky1304.crates.gui;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.github.maiky1304.crates.CratesPlugin;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.items.ItemBuilder;

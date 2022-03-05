@@ -1,15 +1,20 @@
 package com.github.maiky1304.crates.listeners;
 
 import com.github.maiky1304.crates.CratesPlugin;
+import com.github.maiky1304.crates.database.models.User;
+import com.github.maiky1304.crates.gui.ConfirmMenu;
 import com.github.maiky1304.crates.gui.DrawingMenu;
 import com.github.maiky1304.crates.utils.config.models.Crate;
 import com.github.maiky1304.crates.utils.text.Text;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.time.DateUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Date;
 
 @RequiredArgsConstructor
 public class CrateOpenListener implements Listener {
@@ -30,13 +35,29 @@ public class CrateOpenListener implements Listener {
                 .filter(c -> c.isCrateItem(handItem)).findFirst().orElse(null);
         assert crate != null;
 
-        handItem.setAmount(handItem.getAmount() - 1);
+        ConfirmMenu confirmMenu = new ConfirmMenu(instance, event.getPlayer(), crate, player -> {
+            User user = instance.getUserManager().getCache().get(event.getPlayer().getUniqueId());
+            if (!DateUtils.isSameDay(new Date(), new Date(user.getLastCrateTimestamp()))) {
+                user.setCratesToday(0);
+            }
 
-        DrawingMenu menu = new DrawingMenu(instance, event.getPlayer(), crate);
-        menu.open();
+            if (user.getCratesToday() >= instance.getConfiguration().getInt("settings.per-day")) {
+                event.getPlayer().sendMessage(Text.colors("&cYou can't open anymore crates today, try again tomorrow!"));
+                return;
+            }
 
-        event.getPlayer().sendMessage(Text.colors(String.format("&dYou're now opening the crate &7%s&d...",
-                crate.getName())));
+            user.setCratesToday(user.getCratesToday() + 1);
+            user.setLastCrateTimestamp(System.currentTimeMillis());
+
+            handItem.setAmount(handItem.getAmount() - 1);
+
+            DrawingMenu menu = new DrawingMenu(instance, event.getPlayer(), crate);
+            menu.open();
+
+            event.getPlayer().sendMessage(Text.colors(String.format("&dYou're now opening the crate &7%s&d...",
+                    crate.getName())));
+        });
+        confirmMenu.open();
     }
 
 }

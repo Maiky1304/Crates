@@ -3,7 +3,6 @@ package com.github.maiky1304.crates.utils.menu;
 import com.github.maiky1304.crates.utils.text.Text;
 import lombok.Getter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 

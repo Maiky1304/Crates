@@ -45,15 +45,17 @@ public class CrateOpenListener implements Listener {
                 user.setCratesToday(0);
             }
 
-            if (user.getCratesToday() >= instance.getConfiguration().getInt(Option.CRATES_PER_DAY)) {
-                event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_DAILY_LIMIT)));
-                return;
-            }
+            if (!event.getPlayer().hasPermission("crates.bypass")) {
+                if (user.getCratesToday() >= instance.getConfiguration().getInt(Option.CRATES_PER_DAY)) {
+                    event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_DAILY_LIMIT)));
+                    return;
+                }
 
-            if ((user.getLastCrateTimestamp() + (instance.getConfiguration().getInt(Option.CRATES_COOLDOWN)))
-            > System.currentTimeMillis()) {
-                event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_COOLDOWN)));
-                return;
+                if ((user.getLastCrateTimestamp() + (instance.getConfiguration().getInt(Option.CRATES_COOLDOWN)))
+                        > System.currentTimeMillis()) {
+                    event.getPlayer().sendMessage(Text.colors(instance.getMessages().getString(Message.CRATE_COOLDOWN)));
+                    return;
+                }
             }
 
             user.setCratesToday(user.getCratesToday() + 1);
